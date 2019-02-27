@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    jjjjjjjjjjjjj
+    <script>
+        (function () {
+            // // console.log('sssssssssssssssss')
+            var xhr = new XMLHttpRequest()
+            var url = 'http://dtv.homed.me/config/postersize/get_list?accesstoken=R5C3BF1AEU5095506AKB2D05E01IB01AA8C0P0MF4246V0ZFFFFFFFFFFFFFFFFW15799589C95F4FEE'
+
+            xhr.onreadystatechange = () => {
+                // // console.log('xhr.readyState : ', xhr.readyState);
+                // // console.log(this)
+                if (xhr.readyState === 4) {
+                    // HTTP 状态在 200-300 之间表示请求成功
+                    // HTTP 状态为 304 表示请求内容未发生改变，可直接从缓存中读取
+                    if (xhr.status >= 200 &&
+                        xhr.status < 300 ||
+                        xhr.status == 304) {
+                        let data = JSON.parse(xhr.responseText)
+                        let size_info = data.size_list[0].size_arr[0].size_info
+                        let arr = size_info.map(item => {
+                            return item.size
+                        })
+                        // console.log(arr)
+                        let obj1 = checkPoster(arr)
+                        // console.log('obj1: ', obj1);
+                        let obj1_key = Object.keys(obj1).sort()
+                        // console.log('obj1_key: ', obj1_key);
+                        obj1_key.reduce((a, c, index) => {
+                            if (Math.abs(a - c).toFixed(2) == 0.01) {
+                                obj1[a] = obj1[a].concat(obj1[c])
+                                delete obj1[c]
+                            }
+                            return c
+                        }, 0)
+                        // console.log('obj1: ', obj1);
+                        for (const key in obj1) {
+                            if (obj1.hasOwnProperty(key)) {
+                                const element = obj1[key];
+                                // console.log(element[0])
+                                obj1[element[0]] = element
+                                delete obj1[key]
+                            }
+                        }
+                        console.log('obj1: ', obj1);                        
+                    }
+                }
+            }
+            xhr.open('get', url)
+            xhr.send()
+        })()
+        function radioOfPoster(size) {
+            let width = size.split('x')[0]
+            let height = size.split('x')[1]
+            let radio = (width / height).toFixed(2)
+            return radio
+        }
+        function checkPoster(arr) {
+            return arr.reduce((o, k, index) => {
+                radioOfPoster(k) in o ? o[radioOfPoster(k)].push(k) : o[radioOfPoster(k)] = [k]
+                return o;
+            }, {})
+        }
+    </script>
+</body>
+
+</html>

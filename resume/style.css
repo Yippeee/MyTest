@@ -1,0 +1,177 @@
+* {
+    padding: 0px;
+    margin: 0px
+}
+
+body {
+    background: #efefef;
+}
+
+.clearfix::after {
+    clear: both;
+    content: '';
+    display: block;
+}
+
+a {
+    text-decoration: none;
+}
+
+.topNavBar li a {
+    color: #b7b7b7;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 0;
+}
+
+.topNavBar li a:hover {
+    border-bottom: 3px solid #e06567
+}
+
+.logo {
+    float: left;
+    font-size: 24px;
+    font-family: 'Arial Black';
+}
+
+.logo .rs {
+    color: #e6686a;
+    margin-right: 8px
+}
+
+.logo .card {
+    color: #9a9da2;
+}
+
+.topNavBar ul {
+    list-style-type: none
+}
+
+.topNavBar ul li {
+    float: left;
+    margin: 0 17px;
+}
+
+.topNavBar nav {
+    float: right;
+}
+
+.topNavBar {
+    padding: 20px 16px 20px 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 30px 20px;
+}
+
+.navImage {
+    background-image: url(https://fangyinghang.com/resume-15-2/img/rs-cover.jpg);
+    height: 515px;
+    background-size: cover;
+    background-position: center center
+}
+
+.navImage>.mask {
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.userCard {
+    margin: 0 auto;
+    max-width: 940px;
+    background-color: #fff;
+    padding: 50px;
+}
+
+.userCard hr {
+    height: 0px;
+    border: none;
+    border-top: 1px solid #DEDEDE;
+    margin-top: 10px;
+}
+
+.userCard>.avatar {
+    background-image: url('https://fangyinghang.com/resume-15-2/img/avatar.jpg');
+    height: 347px;
+    width: 299px;
+    background-size: cover;
+    float: left;
+}
+
+.userCard>.textInfo {
+    /* border: 1px red solid; */
+    float: left;
+    width: 470px;
+    margin-left: 65px;
+}
+
+.info dt {
+    width: 30%;
+    display: inline-block;
+    font-weight: bold;
+    padding: 5px 0;
+}
+
+.info dd {
+    width: 65%;
+    display: inline-block;
+    color: #9da0a7;
+}
+
+.textInfo .name {
+    margin: 20px 0;
+}
+
+.hello {
+    display: inline-block;
+    background: #e6686a;
+    padding: 4px 16px;
+    color: white;
+    position: relative;
+    margin: 20px 0;
+}
+
+.hello:after {
+    content: '';
+    /* background: #e6686a; */
+    top: 100%;
+    left: 2px;
+    box-sizing: border-box;
+    position: absolute;
+    overflow: hidden;
+    border-top: 5px #e6686a solid;
+    border-left: 5px #e6686a solid;
+    border-bottom: 5px transparent solid;
+    border-right: 5px transparent solid;
+}
+
+.share {
+    margin: 0 auto;
+    max-width: 1040px;
+    height: 72px;
+    background: #E6686A;
+    text-align: center;
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+    vertical-align: 0px;
+    fill: white;
+    overflow: hidden;
+}
+
+.share a {
+    display: inline-block;
+    width: 40px;
+    line-height: 12px;
+    padding: 5px 0;
+    border-radius: 50%;
+    margin: 16px;
+}
+
+.share a:hover {
+    background: #CF5D5F;
+}
