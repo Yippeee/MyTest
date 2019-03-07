@@ -237,9 +237,6 @@ const findRestaurant = function (list1, list2) {
             console.log('i2: ', i2);
             var sum = index + i2
             if (typeof result.sum === 'undefined' || sum < result.sum) {
-                // console.log('result.sum: ', result.sum);
-                // console.log('typeof result.sum : ', typeof result.sum);
-                // console.log('result.length - 1 < 0 ? 0 : result.length - 1: ', result.length - 1 < 0 ? 0 : result.length - 1);
                 result[result.length - 1 < 0 ? 0 : result.length - 1] = {
                     val: element,
                     sum: sum

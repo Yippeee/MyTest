@@ -8,7 +8,7 @@
     <title>Document</title>
 </head>
 
-<body>
+<body onload='init()'>
     <div class="parent">
         <div class="child-1">
             <div class="child-1-1">
@@ -38,44 +38,58 @@
                 f
             </div>
         </div>
+        <img id="img" src="https://user-gold-cdn.xitu.io/2017/12/19/1606e7eaa2a664e8?imageView2/0/w/1280/h/960/format/webp/ignore-error/1"
+            alt="">
     </div>
     <script>
-        let dom = document.getElementsByClassName('parent')[0]
-        // console.log(dom)
-        // console.log(dom.children)
-        console.log('-----------------深度遍历-----------------------')
-        // 深度遍历 DFS
-        function dfs(dom, nodeList=[]) {
-            nodeList.push(dom)
-            let child = dom.children
-            for (let i = 0; i < child.length; i++) {
-                // console.log(child[i].className)
-                dfs(child[i], nodeList)
-            }
-            return nodeList
-        }
-        // dfs(dom)
-        console.log('dfs(dom): ', dfs(dom));
-        console.log('-----------------广度遍历-----------------------')
+        // let dom = document.getElementsByClassName('parent')[0]
+        // // console.log(dom)
+        // // console.log(dom.children)
+        // console.log('-----------------深度遍历-----------------------')
+        // // 深度遍历 DFS
+        // function dfs(dom, nodeList=[]) {
+        //     nodeList.push(dom)
+        //     let child = dom.children
+        //     for (let i = 0; i < child.length; i++) {
+        //         // console.log(child[i].className)
+        //         dfs(child[i], nodeList)
+        //     }
+        //     return nodeList
+        // }
+        // // dfs(dom)
+        // console.log('dfs(dom): ', dfs(dom));
+        // console.log('-----------------广度遍历-----------------------')
 
-        // 广度遍历 BFS
-        function bfs(dom) {
-            let children = dom.children
-            console.log('children: ', children);
-            let childrenArr = []
-            Array.from(children).forEach((dom) => {
-                console.log(dom.className)
-                childrenArr.push(dom)
-            })
-            console.log('childrenArr: ', childrenArr);
-            childrenArr.length > 0 && bfs(childrenArr)
-        }
-        // bfs(dom.children)
-        bfs(dom)
-        console.log('-----------------广度遍历 END-----------------------')
-        // console.log('-----------------deepTraversal1------------------------')
-        let deepTraversal1 = (node, nodeList=[]) =>{
+        // // 广度遍历 BFS
+        // function bfs(dom) {
+        //     let children = dom.children
+        //     console.log('children: ', children);
+        //     let childrenArr = []
+        //     Array.from(children).forEach((dom) => {
+        //         console.log(dom.className)
+        //         childrenArr.push(dom)
+        //     })
+        //     console.log('childrenArr: ', childrenArr);
+        //     childrenArr.length > 0 && bfs(childrenArr)
+        // }
+        // // bfs(dom.children)
+        // bfs(dom)
+        // console.log('-----------------广度遍历 END-----------------------')
+        // // console.log('-----------------deepTraversal1------------------------')
+        // let deepTraversal1 = (node, nodeList=[]) =>{
 
+        // }
+        window.onload = function () {
+            console.log('onload: ');
+            console.log(img.width)
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log('DOMContentLoaded: ');
+            // Handler when the DOM is fully loaded
+            console.log(img.width)
+        });
+        function init() {
+            console.log('iiiiiiiiiiiiii')
         }
     </script>
 </body>
