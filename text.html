@@ -1,43 +1,37 @@
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-    }
-    .left{
-        background: #73DE80;    /* 绿色 */
-        opacity: 0.5;
-        border: 3px solid #F31264;
-        width: 200px;
-        height: 200px;
-        float: left;
-    }
-    .right{                        /* 粉色 */
-        background: #EF5BE2;
-        opacity: 0.5;
-        border: 3px solid #F31264;
-        width:400px;
-        min-height: 100px;
-        overflow: hidden;
-    }
-    .box{
-        background:#888;
-        /* height: 100%; */
-        margin-left: 50px;
-        overflow: hidden;
-    }
-    .little{
-        background: #fff;
-        width: 50px;
-        height: 50px;
-        margin: 10px;
-        float: left;
-    }
-</style>
-<div class='box'>
-    <div class='left'> </div>
-    <div class='right'>
-        <div class='little'></div>
-        <div class='little'></div>
-        <div class='little'></div>
-    </div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #main {
+            background-image: linear-gradient(to bottom, red 20%, white 20%, white 40%, yellow 40%, yellow 60%, green 60%, green 80%, blue 80%, blue 100%);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main" style="height:0px"></div>
+    <script>
+        var h = window.innerHeight
+        var scroll = 0
+        main.style.height = h * 5 + 'px'
+
+        window.onresize = function () {
+            h = window.innerHeight
+            main.style.height = h * 5 + 'px'
+        }
+        // window.onscroll = function (e) {
+        //     if (this.scrollY > scroll) {
+        //         console.log('down')
+        //         window.scrollTo(0,scroll+h);
+        //     }else{
+        //         console.log('up')
+        //     }
+        //     scroll = this.scrollY
+        // };
+    </script>
+</body>
