@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+
+        }
+
+        dl {
+ 
+        }
+
+        dt {
+            height: 50px;
+            line-height: 50px;
+            background-color: grey;
+            position: sticky;
+            top: 10px;
+        }
+
+        dt:nth-of-type(2){
+            top: 20px;
+        }
+
+        dd {
+            height: 50px;
+            line-height: 50px;
+        }
+
+        dd+dd {
+            border-top: 1px solid #ccc;
+        }
+
+        .outWrap {
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .main {
+            width: 600px;
+            height: 3200px;
+            padding-top: 100px;
+            background-image: linear-gradient(to bottom, green 0%, yellow 100%);
+        }
+
+        .info {
+            display: inline-block;
+            position: fixed;
+            background-color: cadetblue;
+            height: 300px;
+            width: 50px;
+            left: 550px;
+        }
+
+        .ad {
+            width: 100px;
+            height: 2000px;
+            background-color: cadetblue;
+        }
+
+        .pro {
+            height: 260px;
+        }
+
+        .st {
+            height: 260px;
+            background-color: blue;
+            height: 260px;
+            width: 100px;
+        }
+
+        .st.a {
+            position: fixed;
+            top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="outWrap">
+        <div class="info"></div>
+        <div class="main">
+            <div>
+                <dl>
+                    <dt>A</dt>
+                    <dd>Andrew W.K.</dd>
+                    <dd>Apparat</dd>
+                    <dd>Arcade Fire</dd>
+                    <dd>At The Drive-In</dd>
+                    <dd>Aziz Ansari</dd>
+                </dl>
+                <dl>
+                    <dt>C</dt>
+                    <dd>Chromeo</dd>
+                    <dd>Common</dd>
+                    <dd>Converge</dd>
+                    <dd>Crystal Castles</dd>
+                    <dd>Cursive</dd>
+                </dl>
+                <dl>
+                    <dt>E</dt>
+                    <dd>Explosions In The Sky</dd>
+                </dl>
+                <dl>
+                    <dt>T</dt>
+                    <dd>Ted Leo & The Pharmacists</dd>
+                    <dd>T-Pain</dd>
+                    <dd>Thrice</dd>
+                    <dd>TV On The Radio</dd>
+                    <dd>Two Gallants</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="ad">
+            <div style="height:350px;background-color: #fff;"></div>
+            <div class="pro">
+                <div class="st"></div>
+            </div>
+            <div class="test" style="height:230px;background:yellow;position:sticky;top:260px">test</div>
+            <div class="test" style="height:230px;background:black;">test</div>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('scroll', function () {
+            var top = document.documentElement.scrollTop
+            if (top > 350) {
+                document.querySelector('.st').classList.add('a')
+            } else {
+                document.querySelector('.st').classList.remove('a')
+            }
+        })
+    </script>
+</body>
+
+</html>

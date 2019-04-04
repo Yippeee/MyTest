@@ -1,74 +1,84 @@
-const PENDING = Symbol(1)
-const FULFILLED = Symbol(2)
-const REJECTED = Symbol(3) // 1,2,3 ues for debug
+const PENDING = 'PENDING'
+const FULFILLED = 'FULFILLED'
+const REJECTED = 'REJECTED'
 
-function Promisee(fn) {
-    if (typeof fn != 'function') {
-        throw new Error('fn should be a function')
-    }
-    let state = PENDING
-    let value = null
-    let hander = {}
-    function fulfill(val) {
-        state = FULFILLED
-        value = val
-        next(hander)
-    }
-    function reject(err) {
-        state = REJECTED
-        value = err
-        next(hander)
-    }
-    // 防止本身在fulfill函数中存在错误的情况
-    function resolve(res) {
+const isFunction = (fn) => typeof fn === 'function'
+
+class MyPromise {
+    constructor(handle) {
+        if (isFunction(handle)) throw new Error('handle must be a function')
+        this.value = undefined
+        this.status = PENDING
+
+        this.fulfilledQueues = []
+        this.rejectedQueues = []
+
         try {
-            fulfill(res)
-        } catch (err) {
-            reject(err)
-        }
-    }
+            handle.call(this, this.resolve.bind(this), this.reject.bind(this))
+        } catch (error) {
 
-    function next({ onFulfill, onReject }) {
-        switch (state) {
-            case FULFILLED:
-                onFulfill && onFulfill(value)
-                break
-            case REJECTED:
-                onReject && onReject(value)
-                break
-            case PENDING:
-                hander = { onFulfill, onReject }
-                break
         }
     }
-    this.then = function (onFulfill, onReject) {
-        return new Promisee((resolve, reject) => {
-            next({
-                onFulfill: (val) => {
-                    resolve(onFulfill(val))
-                },
-                onReject: function (val) {
-                    console.log(val)
+    resolve(value) {
+        this.value = value
+        this.status = FULFILLED
+    }
+    reject(error) {
+        this.value = error
+        this.status = REJECTED
+    }
+    then(onFulfilled, onRejected) {
+        const { value, status } = this
+        return new MyPromise((onFulfilledNext, onRejectedNext) => {
+            const run = (value) => {
+                try {
+                    if (!isFunction(onFulfilled)) {
+                        onFulfilledNext(value) // 穿透
+                    } else {
+                        let res = onFulfilled(value)
+                        if (res instanceof MyPromise) {
+                            res.then(onFulfilledNext, onRejectedNext)
+                        } else {
+                            onFulfilledNext(res)
+                        }
+                    }
+                } catch (error) {
+                    onRejectedNext(error)
                 }
-            })
+            }
+
+            const rejected = (error) => {
+                try {
+                    if (!isFunction(onRejected)) {
+                        onRejectedNext(error)
+                    } else {
+                        let res = onRejected(error)
+                        if (res instanceof MyPromise) {
+                            res.then(onFulfilledNext, onRejectedNext)
+                        } else {
+                            onFulfilledNext(res)
+                        }
+                    }
+                } catch (err) {
+                    onRejectedNext(err)
+                }
+            }
+            switch (status) {
+                case PENDING:
+                    this.rejectedQueues.push(rejected)
+                    this.fulfilledQueues.push(run)
+                case REJECTED:
+                    this.resolve(value)
+                    break
+                case FULFILLED:
+                    this.reject(value)
+                    break
+            }
         })
     }
-    fn(resolve, reject)
 }
 
-let p = new Promisee((resolve, reject) => {
-    // resolve('hello')
-    // reject('fuck')
-    setTimeout(() => {
-        reject('hello')
-    }, 0)
-})
 
-p
-    .then((res) => {
-        console.log(res)
-        return 'kkk'
-    }, console.error.bind(null, 'error'))
-    .then(res => {
-        console.log(res)
-    })
+let p = new Promise(function (resolve, reject) {
+    resolve(10)
+}).then()
