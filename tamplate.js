@@ -27,6 +27,7 @@ var TemplateEngine = function (html, options) {
     }
     add(html.substr(cursor, html.length - cursor));
     code += 'return r.join("");';
+    console.log('code: ', code);
     return new Function(code.replace(/[\r\t\n]/g, '')).apply(options);
 }
 

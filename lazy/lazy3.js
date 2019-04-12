@@ -8,14 +8,14 @@ const range = function* (from, to) {
 
 const map = function* (flow, transform) {
     for (const data of flow) {
-        console.log('map\t', data);
+        // console.log('map\t', data);
         yield (transform(data));
     }
 }
 
 const filter = function* (flow, condition) {
     for (const data of flow) {
-        console.log('filter\t', data);
+        // console.log('filter\t', data);
         if (condition(data)) {
             yield data;
         }
@@ -32,9 +32,9 @@ const stop = function* (flow, condition) {
 }
 
 const take = function (flow, number) {
-    let count = 0;
+    // let count = 0;
     const _filter = function () {
-        return count++ >= number;
+        return --number < 1;
     }
     return stop(flow, _filter);
 }
@@ -75,6 +75,7 @@ function lazy() {
 }
 
 const nums = lazy().range(0, 100).map(n => n * 10).filter(n => n % 3 === 0).take(3);
+console.log('nums: ', nums.iterator);
 
 for (let n of nums) {
     console.log('numF:\t', n, '\n');
