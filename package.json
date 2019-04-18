@@ -12,7 +12,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
+    "http": "0.0.0",
     "https": "^1.0.0",
+    "md5": "^2.2.1",
     "node-fetch": "^2.3.0",
     "ramda": "^0.26.1",
     "translate-api": "^0.3.12"

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <img id="i" src="c" alt="" srcset="">
+    <img id="ii" src="c1" alt="" srcset="">
+    <script>
+        window.onerror = function(){
+            console.log(arguments)
+            return true // 隐藏不？
+            // return false
+        }
+        // setTimeout(() => {
+        //     console.log(b)
+        // })
+        // console.log(a)
+        // console.log(c)
+        // new Promise((resolve, reject) => {
+        //     resolve()
+        // }).then(() => {
+        //     throw new Error('eee')
+        // })
+        i.onerror = function(e) {
+            console.log('e: ', e);
+            console.log(12121221);
+            e.stopPropagation()
+        }
+        window.addEventListener('error', (msg, url, row, col, error) => {
+            console.log('我知道 404 错误了');
+            console.log(
+                msg, url, row, col, error
+            );
+            console.log('arguments: ', arguments);
+            return true;
+        }, true);
+        
+        ii.src = 'www.ccc.com'
+        ii.onerror = function(e) {
+            console.log('e: ', e);
+            console.log(100000)
+        }
+    </script>
+</body>
+
+</html>

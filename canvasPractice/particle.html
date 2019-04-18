@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>particle</title>
+    <style>
+        body {
+            background-color: #0c1328;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="400" height="400">您的浏览器不支持Canvas!</canvas>
+    <script>
+        ; (function () {
+            canvas.width = document.body.clientWidth
+            canvas.height = document.body.clientHeight
+            let img = new Image()
+            let image = {}
+            let ctx = canvas.getContext('2d')
+            img.crossOrigin = ''
+            img.onload = function () {
+                image.obj = img
+                image.x = (canvas.width - img.width) / 2
+                image.y = 100
+                image.w = img.width
+                image.h = img.height
+                ctx.drawImage(image.obj, image.x, image.y, image.w, image.h)
+                image.data = ctx.getImageData(image.x, image.y, image.w, image.h).data
+                console.log('image.data: ', image.data);
+                calculate() // 读取数据
+                draw() // 绘制
+            }
+            img.src = './isux.png'
+        })()
+        let particles = []
+        /**
+         * 得到粒子数组
+        */
+        function calculate(){
+            let cols = 100,
+                rows = 100; // split image to 100 X 100
+            
+        }
+    </script>
+</body>
+
+</html>

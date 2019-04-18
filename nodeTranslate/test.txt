@@ -1,0 +1,30 @@
+var lang = {
+    text_0: {
+        zh: '版<span></span>权<span></span>商',
+        en: 'Copyright dealer'
+    },
+    text_1: {
+        zh: '&gt;&nbsp;当前位置:  <span></span>',
+        en: 'Current position:'
+    },
+    text_2: {
+        zh: '导演名称!',
+        en: 'Director name!'
+    },
+    text_74: {
+        zh: '正在合并...',
+        en: 'Merging...'
+    },
+    text_132: {
+        zh: '<label>视频大</label>小：',
+        en: 'Video size:'
+    },
+    text_78: {
+        zh: '序号/集数',
+        en: 'Number/Set Number'
+    },
+    text_433: {
+        zh: '关联结果发生改动，是否继续保存？',
+        en: 'Relevant results changed, whether to continue to save'
+    },
+}

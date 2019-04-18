@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>新增portal</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="../js/plugin/tlayer/tlayer.css">
+    <link rel="stylesheet" href="css/portal.css">
+    <script src="../js/jquery1.10.2.min.js"></script>
+    <!-- <script src="./../js/plugin/sortable/Sortable.min.js"></script> -->
+    <script src="../js/jquery.cookie.js"></script>
+    <script src="../js/dnsConfig.js"></script>
+    <!-- <script src="../js/dnsConfig.js"></script> -->
+    <script src="../js/config.js"></script>
+    <script src="../js/apiconfig.js"></script>
+    <script src="../js/plugin/tlayer/jquery.tlayer.js"></script>
+    <script src="js/portal.js"></script>
+</head>
+<style type="text/css">
+    .style-list-thumburl {
+        width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>
+<body>
+    <div class="portal-pop portal-edit">
+        <div class="portal-name" style="width: 320px; display: inline-block;">
+            <label class="isMust">portal名称</label>
+            <input type="text" class="new-portal-name" style="width: 190px;">
+        </div>
+        <div class="portal-tyle" style="width: 320px; display: inline-block;">
+            <label class="isMust">portal类型</label>
+            <select name="type" style="width: 190px;">
+                <option value="0">普通版</option>
+                <option value="99">大事件</option>
+                <option value="100">节日版</option>
+            </select>
+        </div>
+        <div class="portal-url">
+            <label class="isMust">portal路径</label>
+            <input type="text" class="new-portal-url" placeholder="此处为通过配置文件修改,若只改名称或描述，则忽略不填" style="width: 500px">
+        </div>
+        <svg t="1550745005611" class="icon" style="display: none;" viewBox="0 0 1024 1024" version="1.1" id='img-close'
+            xmlns="http://www.w3.org/2000/svg" p-id="1094"
+            xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16">
+            <defs>
+                <style type="text/css"></style>
+            </defs>
+            <path d="M512 128C300.8 128 128 300.8 128 512s172.8 384 384 384 384-172.8 384-384S723.2 128 512 128zM512 832c-179.2 0-320-140.8-320-320s140.8-320 320-320 320 140.8 320 320S691.2 832 512 832zM672 352c-12.8-12.8-32-12.8-44.8 0L512 467.2 396.8 352C384 339.2 364.8 339.2 352 352S339.2 384 352 396.8L467.2 512 352 627.2c-12.8 12.8-12.8 32 0 44.8s32 12.8 44.8 0L512 556.8l115.2 115.2c12.8 12.8 32 12.8 44.8 0s12.8-32 0-44.8L556.8 512l115.2-115.2C684.8 384 684.8 364.8 672 352z" p-id="1095" fill="#2c2c2c"></path>
+        </svg>
+        <div class="portal-detail " style="width: 635px;">
+            <label class="isMust">描述</label>
+            <textarea class="new-portal-desc" style="width: 410px"></textarea>
+            <div class="wordnum"><span style="color: #1781F9;">0</span>/100</div>
+            <div class="portal_thumb_url_input">
+                <div class="cross-wrap" style="display:block">
+                    <div id="cross"></div>
+                </div>
+                <div class="portal_img" style="display:none">
+                    <img id="portal_img" src="" alt="" height='85px' width = '155px'>
+                </div>
+            </div>
+        </div>
+        <div class="portal_thumb" style="visibility: hidden;height: 0px;">
+            <label class="isMust">portal缩略图</label>
+            <input type="text" class="portal_thumb_url" placeholder="" style="width: 500px">
+            <input id='fileInput' accept="image/*" type="file" class="new-portal-thumb-url" style="display:inline-block;margin-left: 380px">
+        </div>
+        <div class="andriodImgUrl">
+            <label class="andriodlabel">安卓缩略图url</label>
+            <input type="text" class="andriod-img-url" placeholder="若只改名称或描述，则忽略不填">
+        </div>
+        <div>
+            <br />
+        </div>
+        <div class="portal-style-json">
+            <label class="andriodlabel">Portal风格</label>
+            <div style="width: 100%; text-align: center; display: block;height: 30px; line-height: 30px; text-align: end">
+                <button id="complete" class="hidden">保存</button>
+                <button id="addStyle">新增风格</button>
+            </div>
+            <div style="height: 310px; overflow-y: auto; border: 1px solid #e3e3e3">
+                <table class="style-table">
+                    <thead>
+                        <th class="style-list-name">
+                            风格名称
+                        </th>
+                        
+                        <th class="style-list-url">
+                            风格地址
+                        </th>
+                        <th class="style-list-thumburl">
+                            缩略图地址
+                        </th>
+                        <th class="style-list-type">
+                            风格类型
+                        </th>
+                        <th class="style-list-role">
+                            适合角色
+                        </th>
+                        <th class="style-list-action">
+                            操作
+                        </th>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- <div style="border: 1px solid #e3e3e3; margin-top: 15px;">
+                <div>
+                    <label class="isMust">风格名称:</label>
+                    <input type="text" name="stylename" placeholder="请输入风格名称" style="width: 580px;">
+                    <br />
+                    <label class="isMust">风格地址:</label>
+                    <input type="text" name="styleurl" placeholder="请输入风格地址" style="width: 580px;">
+                    <br />
+                    <label class="isMust">缩略图:&nbsp;&nbsp;</label>
+                    <input type="text" name="style-thumburl" placeholder="请输入风格地址" style="width: 580px;">
+                    <br />
+                    <label class="isMust">风格类型:&nbsp;</label>
+                    <select id="style-type">
+                    </select>
+                    <br />
+                    <label class="isMust role-setting">角色设置:&nbsp;</label>
+                    <span>
+                        <select id="user-group" class="role-setting" style="width: 100px"></select>
+                        <select id="role-list" class="role-setting" style="width: 100px"></select>
+                    </span>
+                </div> -->
+<!--                 <div id="roleSetting">
+                    <div class="role-list-pad">
+                        <div id="roleList">
+                            <div style="width: 100%; display: block; height: 20px;">
+                                <ul id="parent"></ul>
+                            </div>
+                            <div style="width: 100%; display: block;">
+                                <ul id="child"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            
+        </div>
+    </div>
+<script>
+    var refresh;
+    var portalId;
+    var portalName = "";
+    var portalDesc = "";
+    var portalUrl = "";
+    var portalthumburl = "";
+    var style = {};
+    var flag = 0;
+    var sysType = 0;
+    var groupList = []
+    var groupListAll = []
+    var styleType = {
+        '1': '普通版',
+        '2': '用户属性版',
+        '99': '大事件版',
+        '100': '节日版'
+    }
+    var portalConf  = {} ;
+    var globalOption = "";
+    var globalRoleList = ""
+    $(function() {
+        var stylehtml = ''
+        for (var i in styleType) {
+            stylehtml += '<option value="' + i + '">' + styleType[i] + '</option>'
+        }
+        globalOption = stylehtml
+        $('#style-type').empty().append(stylehtml).change(function() {
+            if ($(this).val() == 2) {
+                $('.role-setting').css('visibility', 'visible');
+            } else {
+                $('.role-setting').css('visibility', 'hidden')
+            }
+        })
+
+        //获取当前选中的id
+        var portalFrame = $("#mainFrame", top.document).contents().find("#rightFrame").contents();
+        portalId = portalFrame.find(".imgfocus.select").parent().next(".portalId").val();
+
+        $(".new-portal-desc").on("keyup", function() {
+            portalDesc = $.trim($(".new-portal-desc").val());
+            $(".wordnum span").html(portalDesc.length);
+        });
+
+        $(".new-portal-name").on("change", function() {
+            portalName = $.trim($(".new-portal-name").val());
+        });
+        $('input[type="radio"]').click(function(event) {
+            initRoleList()
+        });
+            
+        $('#addStyle').click(function() {
+            var flag = $('.style-table').find('.editing').length
+            if (flag > 0){
+                showResponseText('有操作还没有保完成，请完成之后再新增')
+                return
+            }
+            var style = ""
+            var dir = ""
+            var stylename = ""
+            var styleThumbUrl = ""
+            
+            var name = []
+            var data = {}
+            var roleid = $('#role-list').val()
+            var role = +roleid
+            if (style == 2) {
+                for (var i in groupList) {
+                    if (groupList[i].id == roleid) {
+                        name.push(groupList[i].name)
+                    }
+                }
+            }
+            var ids = []
+            $('.style-table tbody tr').each(function (idx, el) {
+                ids.push(parseInt(el.getAttribute('data-id')))
+            })
+            ids.sort(function (a, b) {return a - b})
+
+            var html = '<tr class="editing" data-id="' + (ids.length ? parseInt(ids.pop()) + 1 : 1) + '">\
+                    <td><div title="' + stylename + '" class="style-list-name">' + stylename + '</div><div class="style-list-input"><input value=""></div></td>\
+                    <td><div title="' + dir + '" class="style-list-url">' + dir + '</div><div class="style-list-input"><input value=""></div></td>\
+                    <td><div title="' + styleThumbUrl + '" class="style-list-thumburl">' + styleThumbUrl + '</div><div class="style-list-input"><input val=""><input class="role-input" value="" type="file" accept="image/*"></div></td>\
+                    <td><div title="' + styleType[style] + '" class="style-list-type">' + styleType[style] + '</div><div class="style-list-input"><select class="style-select" value="">' + globalOption + '</select></div></td>\
+                    <td><div title="' + name.join(';') + '" class="style-list-role">' + name.join(';') + '</div><div class="style-list-input" style = "visibility:hidden"><select class="style-select-one">' + globalRoleList + '</select><select        class="style-select-two"><select/></div></td>\
+                    <td><button class="review style-list-action">预览</button><button class="delete style-list-action">删除</button><button class="edit style-list-action">编辑</button></td>\
+                </tr>'
+            data.role = role
+            data.dir = dir
+            data.type = +style,
+            data.stylename = stylename
+            data.thumburl = styleThumbUrl
+            $('.style-table tbody').append(html)
+
+            $('tbody tr:last-child .style-select').change(function() {
+                var dom = $(this)
+                var value =  dom.val()
+                if (value == 2) {
+                    $($(this).parents('tr').find('.style-list-input')[4]).css('visibility','visible')
+                } else {
+                    $($(this).parents('tr').find('.style-list-input')[4]).css('visibility','hidden')
+                }
+            })
+            $('tbody tr:last-child .style-select-one').change(function(){
+                initRoleList(false, $(this),$(this.nextSibling))
+            })
+            $('tbody tr:last-child .style-select-one').trigger('change')
+            $('.style-table tbody').children("tr:last-child").data('data', data)
+            $('.role-input:last-child').change(function () {
+                roleChanged.bind(this)()
+            })
+            $('#complete').removeClass('hidden')
+            $('input[name=styleurl]').val("")
+        })
+        $('#complete').click(function() {
+            var editing = $('.editing')[0]
+            if (!editing) return
+            var div1 = $(editing).find('.style-list-name')[0]
+            var div2 = $(editing).find('.style-list-type')[0]
+            var div3 = $(editing).find('.style-list-url')[0]
+            var div4 = $(editing).find('.style-list-thumburl')[0]
+            var div5 = $(editing).find('.style-list-role')[0]
+            var input = $(editing).find('input')
+            $(div1).text(input[0].value)
+            $(div3).text(input[1].value)
+            $(div4).text(input[2].value)
+
+            var select = $(editing).find('select')[0]
+            $(div2).text(styleType[select.value])
+
+            if (!input[0].value) {
+                showResponseText('风格名称不能为空!')
+                return false
+            }
+            if (!input[1].value) {
+                showResponseText('风格地址不能为空!')
+                return false
+            }
+
+            if (!input[2].value) {
+                showResponseText('请输入风格缩略图URL!')
+                return false
+            }
+
+            var roleVal = select.value != 2 ? '' : $(editing).find('select')[2].value
+            if (select.value != 2) {
+                $(div5).text('')
+            }
+            for (var j in groupList) {
+                if (groupList[j].id == roleVal) {
+                    name = groupList[j].name
+                    $(div5).text(name)
+                }
+            }
+            console.log('select: ', select.value);
+            var data = {}
+            data.role = roleVal
+            data.dir = input[1].value
+            data.type = +select.value,
+            data.stylename = input[0].value
+            data.thumburl = input[2].value
+            $(editing).data('data',data)
+            
+            editing.classList.remove('editing')
+
+            $('#complete').addClass('hidden')
+        })
+        $(document).on('click', '.style-table tbody .delete', function(e) {
+            $(e.currentTarget).parent().parent().remove()
+            var flag = $('.style-table').find('.editing').length
+            if (flag == 0){
+                $('#complete').addClass('hidden')                
+            }
+        })
+        $(document).on('click', '.style-table tbody .review', function(e) {
+            var dir = $(e.currentTarget).parent().parent().find('.style-list-thumburl').html()
+            var currSelectArr = [{url:dir}]
+            var $parentFrames = top.frames["popPreviewFrame"];
+            var $preview = $("#popPreviewFrame",top.document)
+            $parentFrames.location.href = "previewPortal.htm?"+parseInt(Math.random()*10000);
+            console.log('currSelectArr',currSelectArr);
+            $preview.load(function(){
+                $preview[0].contentWindow.listArr = currSelectArr;
+                $preview[0].contentWindow.init();
+                $(this).focus();
+                $preview.unbind("load");
+            });
+            $("#popPreview",top.document).css("display","block");
+
+        })
+        $('.portal-tyle select').change(function () {
+            var $this = $(this)
+            var val = $this.val()
+            if (val == 0) {
+                $('#style-type').val(1)
+                $('#style-type').attr('disabled', false)
+            } else {
+                $('#style-type').val(val)
+                $('#style-type').attr('disabled', true)
+            }
+        })
+        $(document).on('click','.style-table .edit',function(e){
+            // $('.editing')[0].classList.remove('.editing')
+            if ($('.editing').length > 0){
+                console.log('$(.editing): ', $('.editing')[0].classList);
+                $('.editing')[0].classList.remove('editing');
+            }
+            var target = $(e.target)
+            var dom = target.parents('tr')[0]
+            dom.classList.add('editing')
+            $('#complete').removeClass('hidden')
+        })
+    });
+    $('#user-group').change(function () {
+        initRoleList()
+    })
+    getUserGroupList(function (r) {
+        var html = ''
+        for (var i = 0;i < r.list.length; i++) {
+            html += "<option value='" + r.list[i].group_id + "'>" + r.list[i].name + "</option>"
+        }
+        // 全局赋值
+        globalRoleList = html
+        $('#user-group').html(html)
+        initRoleList(true)
+    })
+    function roleChanged () {
+        var a = $(this).prev()
+        // 图文上传路径
+        // var slaveAddr = window.globalDnsConfigVar.slaveAddr;
+        var uploadTextImage = slaveReqUrl + "/httpdocsup/hdfshttpdownload/portal/thumbnail/portal" + Date.now() 
+        var fd = new FormData();
+        fd.append('fileToUpload', this.files[0])
+        if (!this.files[0]) return
+        $.ajax({
+            url: uploadTextImage,
+            type: "POST",
+            processData: false,    //必须设置
+            contentType: false,    //必须设置
+            dataType: "JSON",
+            data: fd,
+            success: function(_data){
+                if (_data.ret === 0) {
+                    // 设置图片
+                    a.val(_data.url)
+                    a.parent().prev().attr('title', _data.url)
+                    $(this).parent()
+                } else {
+                    showResponseText("服务器异常!");
+                }
+            },
+            error: function(){
+                showResponseText("服务器异常!");
+            }
+        });
+    }
+    function getUserGroupList (fn) {
+        var data = {
+            accesstoken: top.accesstoken,
+            pageidx: 1,
+            pagenum: 1000,
+            grouptype: 7
+        }
+        $.ajax({
+            url: apiObj.getGroupList.replace(/grouptype=\d+/, 'grouptype=7'),
+            data: data,
+            success: function (r) {
+                if (r.ret === 0 && r.list && r.list.length) {
+                    fn && fn(r)
+                } else {
+                    fn && fn(false)
+                }
+            },
+            error: function () {
+                fn && fn(false)
+            }
+        })
+    }
+
+    function initPageData() {
+        $.ajax({
+            url: apiObj.getPortalInfo + "&portalid=" + portalId,
+            type: "GET",
+            dataType: "JSON",
+            success: function(_data) {
+                $(".new-portal-name").val(_data.portal_name);
+                $(".new-portal-desc").val(_data.portal_desc);
+                $(".wordnum span").html($(".new-portal-desc").val().length);
+                sysType = _data.os;
+                if (sysType == 2) {
+                    $('.andriodImgUrl').css('display', 'block');
+                    $('.new-portal-url').attr('placeholder', '若只改名称或描述，则忽略不填');
+                } else {
+                    $('.new-portal-url').val(_data.portal_url)
+                }
+                $('.portal_thumb_url').val(_data.portal_thumb_url)
+                if (_data.portal_thumb_url) {
+                    setImg(_data.portal_thumb_url)
+                }
+                $('.portal-tyle select').val(_data.portal_type)
+                var style = _data.style
+
+                var portaltype = _data.portal_type
+                if (portaltype == 0) {
+                    $('#style-type').attr('disabled', false)
+                    $('#style-type').val(1)
+                } else {
+                    $('#style-type').attr('disabled', true)
+                    $('#style-type').val(portaltype)
+                }
+                if (style && style.length > 0) {
+                    for (var i in style) {
+                        var curr = style[i]
+                        var name = ''
+                        var role = curr.userlabel
+                        var roleOne = ""
+                        var groupName = ''
+                        if (role) {
+                            for (var j in groupList) {
+                                if (groupList[j].id == role) {
+                                    name = groupList[j].name
+                                    // 获取role上层数据
+                                    var tem = j
+                                    while (tem > 0 && groupList[tem].items) {
+                                        tem--
+                                    }
+                                    roleOne = groupList[tem].desc
+                                    groupName = roleOne
+                                    if(!/^\d+$/.test(roleOne)){
+                                        const reg = new RegExp("value\s*=\s*'(\d*)'\s*>\s*" + roleOne)
+                                        roleOne = reg.exec(globalRoleList)[1] - 0
+                                    }
+                                }
+                            }
+                        }
+
+                        var html = '<tr data-id=' + curr.style_id + ' >\
+                            <td><div title="' + curr.style_name + '" class="style-list-name">' + curr.style_name + '</div><div class="style-list-input"><input value="' + curr.style_name + '"></div></td>\
+                            <td><div title="' + curr.styleurl + '" class="style-list-url">' + curr.styleurl + '</div><div class="style-list-input"><input value="' + curr.styleurl + '"></div></td>\
+                            <td><div title="' + curr.thumb_url + '" class="style-list-thumburl">' + curr.thumb_url + '</div><div class="style-list-input"><input value="' + curr.thumb_url + '"><input class="role-input" value="" type="file" accept="image/*"></div></td>\
+                            <td><div title="' + styleType[curr.styletype] + '" class="style-list-type">' + styleType[curr.styletype] + '</div><div class="style-list-input"><select class="style-select" value="' + curr.styletype + '">' + globalOption + '</select></div></td>\
+                            <td><div title="' + name + '" class="style-list-role">' + name + '</div><div class="style-list-input" style = "visibility:hidden"><select class="style-select-one">' + globalRoleList + '</select><select class="style-select-two"><select/></div></td>\
+                            <td><button class="review style-list-action">预览</button><button class="delete style-list-action">删除</button><button class="edit style-list-action">编辑</button></td>\
+                        </tr>'
+                        var data = {
+                            role: role,
+                            dir: curr.styleurl,
+                            type: curr.styletype,
+                            stylename: curr.style_name,
+                            thumburl: curr.thumb_url
+                        }
+                        $('.style-table tbody').append(html)
+                        $('tbody tr:last-child .style-select').val(curr.styletype)
+                        if (curr.styletype === 2) {
+                            $('tbody tr:last-child .style-list-input:last-child').css('visibility','visible')
+                            // console.log($('tbody tr:last-child .style-list-input'))
+                        }
+                        $('tbody tr:last-child .style-select').change(function() {
+                            var dom = $(this)
+                            var value =  dom.val()
+                            if (value == 2) {
+                                $($(this).parents('tr').find('.style-list-input')[4]).css('visibility','visible')
+                            } else {
+                                $($(this).parents('tr').find('.style-list-input')[4]).css('visibility','hidden')
+                            }
+                        })
+                        $('tbody tr:last-child .style-select-one').change(function(){
+                            initRoleList(false, $(this),$(this.nextSibling))
+                        })
+
+                        $('tbody tr:last-child .style-select-one').val(roleOne)
+                        // $('tbody tr:last-child .style-select-one').trigger('change')
+                        var fn = function () {
+                            var a = $('tr:last-child select:last-child')[1]
+                            let role1 = role // 利用let的特性完成闭包的功能
+                            setTimeout(() =>{
+                                a.value = role1 - 0
+                            },100)
+                        }(role)
+                        initRoleList(false, $('tbody tr:last-child select.style-select-one'),$('tbody tr:last-child select.style-select-two'), fn)
+
+                        $('.role-input:last-child').change(function () {
+                            roleChanged.bind(this)()
+                        })
+                        
+                        $('.style-table tbody tr:last-child').data('data', data)
+                    }
+                }
+                $('#user-group').trigger('change')
+            },
+            error: function() {
+                console.log("服务器异常！");
+            }
+        });
+    }
+
+    function initData(_refresh) {
+        var editingFlag = $('.style-table').find('.editing').length
+        if (editingFlag > 0){
+            showResponseText("有没有保存的操作，请保存后再确定");
+            return
+        }
+        //将refresh注册为全局
+        refresh = _refresh;
+        //@chengyang
+        portalName = $.trim($(".new-portal-name").val());
+
+        portalUrl = $.trim($(".new-portal-url").val());
+
+        // 正则匹配,匹配portal路径
+        //      var rUrl=/^((http|https):\/\/webclient.homed.me)\/.*$/;
+        var rUrl = /^((http|https):\/\/*)\/.*$/;
+
+        if (portalName != "" || portalDesc != "") {
+            if (portalUrl == "") {
+                submitData();
+            } else {
+                flag = 1;
+                if (rUrl.test(portalUrl) && sysType == 1) {
+                    loadScript();
+                } else if (sysType == 2) {
+                    updateData(2);
+                } else {
+                    showResponseText("portal路径错误！");
+                }
+            }
+        } else if (portalName == "") {
+            showResponseText("portal名称错误！");
+        }
+    }
+
+    function submitData() {
+
+        // http://webclient.homed.me/application/homedPortal/index.php?bsID=9
+        var thumbUrl = $.trim($('.andriod-img-url').val());
+        var portalThumbUrl = $.trim($('.portal_thumb_url').val())
+        var $trs = $('.style-table tbody tr')
+        var style = []
+        if ($trs.length > 0) {
+            $trs.each(function(idx, el) {
+                var $el = $(el)
+                var data = $el.data('data')
+                var tmpObj = {
+                    styletype: data.type,
+                    styleurl: data.dir,
+                    stylename: data.stylename,
+                    styleid: idx + 1,
+                    thumburl: data.thumburl
+                }
+                if (data.type ==2 ) {
+                    tmpObj.userlabel = data.role + ''
+                }
+                style.push(tmpObj)
+            })
+        }
+        top.console.log(style)
+        var url = $('.new-portal-url').val()
+        if (!url) {
+            $.alert('请输入portalurl')
+            return
+        }
+        var data = {
+            accesstoken: top.accesstoken,
+            portalid: portalId,
+            portalname: portalName,
+            portalurl: url,
+            portaldesc: portalDesc,
+            portalthumburl: portalThumbUrl,
+            // portalthumburl: thumbUrl,
+            os: sysType,
+            type: +$('.portal-tyle select').val(),
+            style: style
+        }
+        $.ajax({
+            url: apiObj.editPortal,
+            type: "POST",
+            dataType: "JSON",
+            data: JSON.stringify(data),
+            success: function(_data) {
+                if (_data.ret == 61100) {
+                    showResponseText("内容包含敏感词！");
+                    return false;
+                }
+                refresh();
+            },
+            error: function() {
+                showResponseText("服务器异常!");
+            }
+        });
+    }
+
+    function loadScript() {
+        var prefix = portalUrl.slice(0, portalUrl.lastIndexOf("/"));
+        var postfix = portalUrl.slice(portalUrl.lastIndexOf("/") + 1).split(".")[1];
+        if (postfix && postfix.indexOf("?") > 0) {
+            var fileName = portalUrl.slice(portalUrl.lastIndexOf("/") + 1).split(".")[0] + "_" + postfix.split("=")[1] + ".js";
+        } else {
+            var fileName = portalUrl.slice(portalUrl.lastIndexOf("/") + 1).split(".")[0] + ".js";
+        }
+        var jsUrl = prefix + "/portalConfig/" + fileName;
+
+        portalName = portalConf.name;
+        portalthumburl = prefix + "/" + portalConf.portal_img_url;
+        style = portalConf.style;
+        try {
+            var rst = JSON.stringify(style).replace(/_/g, "");
+            style = JSON.parse(rst);
+        } catch(e) {
+            console.error(e)
+        }
+        if (style) {
+            for (var i = 0; i < style.length; i++) {
+                style[i].thumburl = prefix + "/" + style[i].thumburl;
+            }
+        }
+        updateData(1);
+        
+
+        // $.ajax({
+        //     url: jsUrl,
+        //     type: "GET",
+        //     dataType: "script",
+        //     //scriptCharset: "gbk",
+        //     success: function() {
+        //         portalName = portalConf.name;
+        //         portalthumburl = prefix + "/" + portalConf.portal_img_url;
+        //         style = portalConf.style;
+        //         var rst = JSON.stringify(style).replace(/_/g, "");
+        //         style = JSON.parse(rst);
+        //         for (var i = 0; i < style.length; i++) {
+        //             style[i].thumburl = prefix + "/" + style[i].thumburl;
+        //         }
+        //         updateData(1);
+        //     },
+        //     error: function() {
+        //         showResponseText("获取配置文件失败，请检查portal路径！");
+        //     }
+        // });
+
+        // setTimeout(function() {
+        //     if (typeof portalConf == 'undefined') {
+        //         showResponseText("获取配置文件失败，请检查portal路径！");
+        //     }
+        // }, 1500)
+    }
+    function updateData(val) {
+        if (flag == 1) {
+            portalDesc = $.trim($(".new-portal-desc").val());
+            if (portalName != "") portalName = $.trim($(".new-portal-name").val());
+        }
+        if (val == 1) {
+            var editUrl = $.trim($('.new-portal-url').val());
+            var thumbUrl = portalthumburl;
+        } else if (val == 2) {
+            editUrl = $.trim($('.new-portal-url').val());
+            thumbUrl = $.trim($('.andriod-img-url').val());
+        }
+        var portalThumbUrl = $.trim($('.portal_thumb_url').val())
+        var $trs = $('.style-table tbody tr')
+        var style = []
+        if ($trs.length > 0) {
+            $trs.each(function(idx, el) {
+                var $el = $(el)
+                var data = $el.data('data')
+                var tmpObj = {
+                    styletype: data.type,
+                    styleurl: data.dir,
+                    stylename: data.stylename,
+                    styleid: parseInt($el.attr('data-id')),
+                    thumburl: data.thumburl
+                }
+                if (data.type == 2) {
+                    tmpObj.userlabel = data.role + ''
+                }
+                style.push(tmpObj)
+            })
+        }
+        //  大事件、节日、用户属性版、普通版 99、100、2、1
+        var type = []
+        style.sort(function (a, b) {
+            type.push(a.styletype)
+            type.push(b.styletype)
+            return a.styletype - b.styletype
+        })
+        if (style.length >= 2) {
+            if (~type.indexOf(100) && ~type.indexOf(99)) {
+                var tmp = style[style.length - 1]
+                style[style.length - 1] = style[style.length - 2]
+                style[style.length - 2] = tmp
+            }
+        }
+        style.reverse()
+        var data = {
+            accesstoken: top.accesstoken,
+            portalid: portalId,
+            portalname: portalName,
+            portalurl: editUrl,
+            portaldesc: portalDesc,
+            portalthumburl: portalThumbUrl,
+            // portalthumburl: thumbUrl,
+            os: sysType,
+            type: +$('.portal-tyle select').val(),
+            style: style
+        }
+       
+        $.ajax({
+            url: apiObj.editPortal,
+            type: "POST",
+            dataType: "JSON",
+            data: JSON.stringify(data),
+            success: function(_data) {
+                if (_data.ret == 61100) {
+                    showResponseText("内容包含敏感词！");
+                    return false;
+                }
+                refresh();
+            },
+            error: function() {
+                showResponseText("服务器异常!");
+            }
+        });
+    }
+
+    function showResponseText(_msg, _width) {
+
+        $.msg({
+            context: top.document,
+            width: _width || "300px",
+            delay: 1000,
+            content: {
+                html: _msg,
+                icon: "js/plugin/tlayer/icon.png"
+            }
+        });
+
+    }
+    function initRoleList (flag,dom1=$('#user-group'),dom2=$('#role-list'),callback) {
+        var params = {
+            accesstoken: accesstoken,
+            pageidx: 1,
+            pagenum: 100,
+            type: 2,
+            status: 1 // filter
+        }
+        if (!flag) {
+            params.user_group_id = dom1.val()
+        }
+        $.ajax({
+            url: apiObj.getRoleList,
+            data: params,
+            success: function (r) {
+                if (flag) {
+                    initPageData()
+                }
+                if (r.ret == 0 && r.list && r.list.length > 0) {
+                    groupList = r.list[0].user_label_list
+                    var html = ''
+                    groupList.map(function (el, idx) {
+                        html += '<option value="'+el.id+'">'+el.name+'</option>'
+                    })
+                    // $('#style-type').trigger('change')
+                    dom2.empty().html(html)
+                    callback && callback()
+                }
+            },
+            error: function () {
+
+            }
+        })
+    }
+    $('.cross-wrap').click(function() {
+        $('#fileInput').click()
+    })
+    // 上传本地图片,获取地址
+    $('#fileInput').change(function () {
+        // 图文上传路径
+        var slaveAddr = window.globalDnsConfigVar.slaveAddr;
+        var uploadTextImage = slaveAddr + "/httpdocsup/hdfshttpdownload/portal/thumbnail/" + Date.now() 
+        var fd = new FormData();
+        console.log(this.files[0])
+        fd.append('fileToUpload', this.files[0])
+        if (!this.files[0]) return
+        $.ajax({
+            url: uploadTextImage,
+            type: "POST",
+            processData: false,    //必须设置
+            contentType: false,    //必须设置
+            dataType: "JSON",
+            data: fd,
+            success: function(_data){
+                if (_data.ret === 0) {
+                    setImg(_data.url) // 设置图片
+                } else {
+                    showResponseText("服务器异常!");
+                }
+            },
+            error: function(){
+                showResponseText("服务器异常!");
+            }
+        });
+        
+    })
+    // delete image
+    $('#img-close').click(function() {
+        deleteImg()
+    })
+    function setImg (url) {
+        $('.portal_thumb_url:first').val(url)
+        $('#portal_img')[0].src = url
+        $('.cross-wrap')[0].style.display = 'none'
+        $('#img-close')[0].style.display = 'inline'
+        $('.portal_img')[0].style.display = 'inline'
+    }
+    function deleteImg () {
+        $('#portal_img')[0].src = ''
+        $('.cross-wrap')[0].style.display = 'block'
+        $('#img-close')[0].style.display = 'none'
+        $('.portal_img')[0].style.display = 'none'
+        $('.portal_thumb_url:first').val('')
+    }
+    
+    </script>
+</body>
+
+</html>
