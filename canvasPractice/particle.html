@@ -16,35 +16,68 @@
 <body>
     <canvas id="canvas" width="400" height="400">您的浏览器不支持Canvas!</canvas>
     <script>
-        ; (function () {
-            canvas.width = document.body.clientWidth
-            canvas.height = document.body.clientHeight
-            let img = new Image()
-            let image = {}
-            let ctx = canvas.getContext('2d')
-            img.crossOrigin = ''
-            img.onload = function () {
-                image.obj = img
-                image.x = (canvas.width - img.width) / 2
-                image.y = 100
-                image.w = img.width
-                image.h = img.height
-                ctx.drawImage(image.obj, image.x, image.y, image.w, image.h)
-                image.data = ctx.getImageData(image.x, image.y, image.w, image.h).data
-                console.log('image.data: ', image.data);
-                calculate() // 读取数据
-                draw() // 绘制
-            }
-            img.src = './isux.png'
-        })()
+        let image = {}
+            ; (function () {
+                canvas.width = document.body.clientWidth
+                canvas.height = document.body.clientHeight
+                let img = new Image()
+                ctx = canvas.getContext('2d')
+                img.crossOrigin = ''
+                img.onload = function () {
+                    image.obj = img
+                    image.x = (canvas.width - img.width) / 2
+                    image.y = 100
+                    image.w = img.width
+                    image.h = img.height
+                    ctx.drawImage(image.obj, image.x, image.y, image.w, image.h)
+                    image.data = ctx.getImageData(image.x, image.y, image.w, image.h).data
+                    console.log('image.data: ', image.data);
+                    calculate(50, 50) // 读取数据
+                    draw() // 绘制
+                }
+                img.src = './isux.png'
+            })()
         let particles = []
         /**
          * 得到粒子数组
         */
-        function calculate(){
-            let cols = 100,
-                rows = 100; // split image to 100 X 100
-            
+        function calculate(h = image.h, w = image.w) {
+            console.log('h: ', h);
+            let particle, pos;
+            let s_width = parseInt(image.w / w),
+                s_height = parseInt(image.h / h);
+            for (let i = 0; i < h; i++) { // 列
+                for (let j = 0; j < w; j++) { // 行
+                    pos = (i * s_height * image.w + j * s_width) * 4
+                    if (image.data[pos + 3] > 100) {
+                        particle = {
+                            x: image.x + i * s_height + (Math.random() - 0.5) * 10,
+                            y: image.y + j * s_width + (Math.random() - 0.5) * 10
+                        }
+                        particles.push(particle)
+                    }
+                }
+            }
+        }
+
+        function draw() {
+            console.log('particles: ', particles);
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            let cur = null
+            for (let i = 0; i < particles.length; i++) {
+                cur = particles[i]
+                // ctx.fillStyle = '#9abc1c'
+                // ctx.fillRect(cur.x, cur.y, 1, 1)
+
+                ctx.beginPath()
+                ctx.strokeStyle = '#ffa900'
+                ctx.fillStyle = '#ffa900'
+                ctx.arc(cur.x, cur.y,3,0,Math.PI*2,true)
+                ctx.font = '48px serif'
+                // ctx.strokeText('HELLO C =>', 200, 250);
+                // ctx.strokeText('<= C OLLEH', 800, 250);
+                ctx.fill()
+            }
         }
     </script>
 </body>

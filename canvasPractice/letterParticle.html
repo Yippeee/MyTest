@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text">
+    <canvas id="canvas" width='400' height='400'></canvas>
+    <canvas id="canvas2" width='400' height='400'></canvas>
+    <img src="" alt="" id="imgO">
+    <script>
+        let ctx1 = canvas.getContext('2d')
+        let ctx2 = canvas2.getContext('2d')
+
+        window.addEventListener('change', function (e) {
+            ctx2.clearRect(0, 0, canvas.width, canvas.height)
+            let val = e.target.value
+            ctx2.font = "48px serif";
+            ctx2.textBaseline = "hanging";
+            ctx2.strokeText(val, 0, 100);
+            let data = canvas2.toDataURL()
+            let img = new Image()
+            let image = {}
+            img.onload = function () {
+                ctx2.clearRect(0, 0, canvas.width, canvas.height)
+                console.log('img: ', img);
+                let particles = []
+                image.obj = img
+                image.x = (canvas.width - img.width) / 2
+                image.y = 0
+                image.w = img.width
+                image.h = img.height
+                ctx2.drawImage(image.obj, image.x, image.y, image.w, image.h)
+                image.data = ctx2.getImageData(image.x, image.y, image.w, image.h).data
+                console.log('image: ', image);
+                particles = calculate(image)
+                draw(ctx1, particles)
+            }
+            img.src = data
+            imgO.src = data
+        })
+
+        function calculate(image) {
+            let particles = [], dataArr = image.data
+            let h = image.h, w = image.w;
+            let particle, pos;
+            let s_width = parseInt(image.w / w),
+                s_height = parseInt(image.h / h);
+            for (let i = 0; i < h; i++) { // 列
+                for (let j = 0; j < w; j++) { // 行
+                    pos = (i * s_height * image.w + j * s_width) * 4
+                    if (dataArr[pos + 3]) {
+                        particle = {
+                            x: image.x + i * s_height,
+                            y: image.y + j * s_width
+                        }
+                        particles.push(particle)
+                    }
+                }
+            }
+            return particles
+        }
+
+        function draw(ctx, particles) {
+            ctx1.clearRect(0, 0, canvas.width, canvas.height)
+            let cur = null
+            for (let i = 0; i < particles.length; i++) {
+                cur = particles[i]
+                ctx.fillStyle = '#9abc1c'
+                ctx.fillRect(cur.y, cur.x, 1, 1)
+            }
+        }
+
+    </script>
+</body>
+
+</html>

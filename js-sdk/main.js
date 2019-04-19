@@ -1,5 +1,5 @@
 function translate (word) {
-    var query = '版权商';
+    var query = '一共78个错误';
     var appid = '20190130000260357';
     var key = 'ad0HuSCtr35WmBVzwoC6';
     var salt = (new Date).getTime();
