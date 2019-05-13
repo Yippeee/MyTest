@@ -1,8 +1,10 @@
 const fs = require('fs')
+const path = require('path')
 const { translate } = require('./translate.js')
+const { readDir } = require('./readDir.js')
 
 function generateLangFile(data) {
-    const reg = /(\/\/\s*[^\s]*)*([\u4E00-\u9FA5\uf900-\ufa2d]*[a-zA-Z,.，]*[\u4E00-\u9FA5\uf900-\ufa2d]+[a-zA-Z,.，!]*[\u4E00-\u9FA5\uf900-\ufa2d]*)(?:<|'|")/gsm
+    const reg = /(\/\/\s*[^\s]*)*([\u4E00-\u9FA5\uf900-\ufa2d]*[a-zA-Z,.，!！？?。\s]*[\u4E00-\u9FA5\uf900-\ufa2d]+[a-zA-Z,.，!！？?。：:\s]*[\u4E00-\u9FA5\uf900-\ufa2d]*)(?:<|'|")/gsm
 
     let wordArr = []
     let resultObj = {}
@@ -28,17 +30,21 @@ function generateLangFile(data) {
     })
 }
 
-// multiply files sync read
+function readData(files) {
+    return files.reduce((allData, curPath, index) => {
+        try {
+            let data = fs.readFileSync(curPath)
+            return allData.toString().concat(data.toString())
+        } catch (e) {
+            console.log(`第{index}个文件-${curPath}发生了错误${e}`)
+        }
+    }, '')
+}
 
-let files = ['./editPortal.html', './groupManage.htm']
+var filePath = path.resolve('E:\\company-projectMediumWeb\\portalRouter');
 
-let data = files.reduce((allData, curPath, index) => {
-    try {
-        let data = fs.readFileSync(curPath)
-        return allData.toString().concat(data.toString())
-    } catch (e) {
-        console.log(`第{index}个文件，${curPath}发生了错误${e}`)
-    }
-}, '')
+readDir(filePath).then((files) => {
+    let data = readData(files)
+    generateLangFile(data)
+})
 
-generateLangFile(data)

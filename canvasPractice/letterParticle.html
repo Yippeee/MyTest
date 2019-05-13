@@ -20,8 +20,8 @@
         window.addEventListener('change', function (e) {
             ctx2.clearRect(0, 0, canvas.width, canvas.height)
             let val = e.target.value
-            ctx2.font = "48px serif";
-            ctx2.textBaseline = "hanging";
+            ctx2.font = "256px 微软雅黑";
+            ctx2.textBaseline = "top";
             ctx2.strokeText(val, 0, 100);
             let data = canvas2.toDataURL()
             let img = new Image()
@@ -72,7 +72,7 @@
             for (let i = 0; i < particles.length; i++) {
                 cur = particles[i]
                 ctx.fillStyle = '#9abc1c'
-                ctx.fillRect(cur.y, cur.x, 1, 1)
+                ctx.fillRect(cur.y, cur.x, 2, 2)
             }
         }
 

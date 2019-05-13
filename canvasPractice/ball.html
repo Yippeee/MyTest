@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ball</title>
+    <style>
+        .tips {
+            display: inline-block;
+            width: 194px;
+            height: 300px;
+            vertical-align: top;
+            font-size: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="1600" height="800"></canvas>
+    <div class="tips">
+            <kbd>A</kbd> <kbd>←</kbd>: 左移
+            <kbd>D</kbd> <kbd>→</kbd>: 右移
+    </div>
+    <script>
+        /**
+         *  @ctx: canvas画布
+         *  @x @y 初始位置信息
+         *  @vx @vy 初速度信息
+        */
+        class Ball {
+            constructor(ctx, x, y, vx, vy) {
+                [this.ctx, this.x, this.y, this.vx, this.vy] = arguments
+                this.moveBind = this.move.bind(this)
+                requestAnimationFrame(this.moveBind)
+            }
+            draw() {
+                let { ctx, x, y } = this
+                ctx.beginPath()
+                ctx.arc(x, y, 30, 0, Math.PI * 2, true)
+                ctx.closePath()
+                ctx.fillStyle = 'blue'
+                ctx.fill()
+            }
+            move() {
+                // this.ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+                this.ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
+                this.ctx.fillRect(0, 0, canvas.width, canvas.height - 30)
+
+                this.draw()
+                if (this.x + this.vx > canvas.width || this.x + this.vx < 0) {
+                    this.vx = -this.vx
+                }
+                if (this.y + this.vy < 0) { // 上面触底
+                    this.vy = -this.vy
+                }
+                if (this.y + this.vy >= canvas.height - b.height) {
+                    if (b.x + b.width > this.x && b.x < this.x) {
+                        this.vy = -this.vy
+                        b.update()
+                    } else {
+                        if(confirm('再来一次吗？')){
+                            window.location.reload()
+                        }
+                        console.log('game over')
+                        cancelAnimationFrame(this.ani)
+                        return
+                    }
+                }
+                this.x += this.vx
+                this.y += this.vy
+                this.ani = requestAnimationFrame(this.moveBind)
+            }
+        }
+
+        class Brick {
+            constructor() {
+                this.width = 500
+                this.height = 30
+                this.x = 0
+                this.y = canvas.height - 30
+                this.ctx = canvas.getContext('2d')
+                this.update()
+
+                this.keyDown = function (e) {
+                    let { key: val } = e
+                    console.log('val: ', val);
+                    switch (val) {
+                        case 'a':
+                        case 'ArrowLeft':
+                            this.move(-10)
+                            break
+                        case 'd':
+                        case 'ArrowRight':
+                            this.move(10)
+                            break
+                        default:
+                            return
+                    }
+                }.bind(this)
+
+                window.addEventListener('keydown', this.keyDown)
+            }
+            move(val) {
+                if (this.x + val > 0 && this.x + this.width + val < canvas.width) {
+                    this.x += val
+                }
+                this.update()
+            }
+            update() {
+                this.ctx.clearRect(0, this.y, canvas.width, 30)
+                this.ctx.save()
+                this.ctx.fillStyle = 'green'
+                this.ctx.fillRect(this.x, this.y, this.width, this.height)
+                this.ctx.restore()
+            }
+        }
+
+        let a = new Ball(canvas.getContext('2d'), 100, 100, 5, 8)
+        let b = new Brick()
+    </script>
+</body>
+
+</html>

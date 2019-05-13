@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script lang="javascript" src="./xlsx.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <input type="file" id="excel-file">
+    <input type="file" id="excel-file2">
+    <button onclick="compare()">对比生成</button>
+    <a href="" download="文件名.xlsx" id="hf"></a>
+    <script>
+        Date.prototype.format = function (fmt) {
+            var o = {
+                "M+": this.getMonth() + 1,                 //月份 
+                "d+": this.getDate(),                    //日 
+                "h+": this.getHours(),                   //小时 
+                "m+": this.getMinutes(),                 //分 
+                "s+": this.getSeconds(),                 //秒 
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+                "S": this.getMilliseconds()             //毫秒 
+            };
+            if (/(y+)/.test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            }
+            for (var k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                }
+            }
+            return fmt;
+        }
+        let data1, data2
+        $('#excel-file').change(function (e) {
+            var files = e.target.files;
+
+            var fileReader = new FileReader();
+            fileReader.onload = function (ev) {
+                try {
+                    var data = ev.target.result,
+                        workbook = XLSX.read(data, {
+                            type: 'binary'
+                        }), // 以二进制流方式读取得到整份excel表格对象
+                        persons = []; // 存储获取到的数据
+                } catch (e) {
+                    console.log('e: ', e);
+                    console.log('文件类型不正确');
+                    return;
+                }
+
+                // 表格的表格范围，可用于判断表头是否数量是否正确
+                var fromTo = '';
+                // 遍历每张表读取
+                for (var sheet in workbook.Sheets) {
+                    if (workbook.Sheets.hasOwnProperty(sheet)) {
+                        fromTo = workbook.Sheets[sheet]['!ref'];
+                        console.log(fromTo);
+                        persons = persons.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
+                        // break; // 如果只取第一张表，就取消注释这行
+                    }
+                }
+
+                console.log(persons);
+                data1 = persons
+            };
+
+            // 以二进制方式打开文件
+            fileReader.readAsBinaryString(files[0]);
+        });
+        $('#excel-file2').change(function (e) {
+            var files = e.target.files;
+
+            var fileReader = new FileReader();
+            fileReader.onload = function (ev) {
+                try {
+                    var data = ev.target.result,
+                        workbook = XLSX.read(data, {
+                            type: 'binary'
+                        }), // 以二进制流方式读取得到整份excel表格对象
+                        persons = []; // 存储获取到的数据
+                } catch (e) {
+                    console.log('e: ', e);
+                    console.log('文件类型不正确');
+                    return;
+                }
+
+                // 表格的表格范围，可用于判断表头是否数量是否正确
+                var fromTo = '';
+                // 遍历每张表读取
+                for (var sheet in workbook.Sheets) {
+                    if (workbook.Sheets.hasOwnProperty(sheet)) {
+                        fromTo = workbook.Sheets[sheet]['!ref'];
+                        console.log(fromTo);
+                        persons = persons.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
+                        break; // 如果只取第一张表，就取消注释这行
+                    }
+                }
+
+                console.log(persons);
+                data2 = persons
+                console.log(typeof data2)
+            };
+
+            // 以二进制方式打开文件
+            fileReader.readAsBinaryString(files[0]);
+        });
+
+
+        function compare() {
+            console.log('data1: ', data1);
+            console.log('data2: ', data2);
+            if(!(data1 && data2)) throw new Error('文件选完哦')
+            // data1[0].
+            for (const key in data1) {
+                if (data1.hasOwnProperty(key)) {
+                    const element = data1[key];
+                    // console.log('element: ', element.商品编码);
+                    let code1 = element.商品编码
+                    for (const key2 in data2) {
+                        if (data2.hasOwnProperty(key2)) {
+                            const element2 = data2[key2];
+                            let code2 = element2.商品编码
+                            if (code1 === code2 && element.会计日 > element2.生效时间) {
+                                // if(!element.识别号 || element2.识别号 > element.识别号){
+                                element.识别号 = element2.识别号
+                                console.log('element2: ', element2);
+                                console.log('element.识别号: ', element.识别号);
+                                break;
+                            }
+                        }
+                    }
+                    element.会计日 = new Date(1900, 0, element.会计日 - 1).format("yyyy/MM/dd")
+                    element.业务时间 = new Date(1900, 0, element.业务时间 - 1).format("yyyy/MM/dd")
+                }
+            }
+            console.log('data1: ', data1);
+            var tmpDown; //导出的二进制对象
+            function downloadExl(json, type) {
+                var tmpdata = json[0];
+                json.unshift({});
+                var keyMap = []; //获取keys
+                //keyMap =Object.keys(json[0]);
+                for (var k in tmpdata) {
+                    keyMap.push(k);
+                    json[0][k] = k;
+                }
+                var tmpdata = [];//用来保存转换好的json 
+                json.map((v, i) => keyMap.map((k, j) => Object.assign({}, {
+                    v: v[k],
+                    position: (j > 25 ? getCharCol(j) : String.fromCharCode(65 + j)) + (i + 1)
+                }))).reduce((prev, next) => prev.concat(next)).forEach((v, i) => tmpdata[v.position] = {
+                    v: v.v
+                });
+                var outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
+                var tmpWB = {
+                    SheetNames: ['mySheet'], //保存的表标题
+                    Sheets: {
+                        'mySheet': Object.assign({},
+                            tmpdata, //内容
+                            {
+                                '!ref': outputPos[0] + ':' + outputPos[outputPos.length - 1] //设置填充区域
+                            })
+                    }
+                };
+                tmpDown = new Blob([s2ab(XLSX.write(tmpWB,
+                    { bookType: (type == undefined ? 'xlsx' : type), bookSST: false, type: 'binary' }//这里的数据是用来定义导出的格式类型
+                ))], {
+                        type: ""
+                    }); //创建二进制对象写入转换好的字节流
+                var href = URL.createObjectURL(tmpDown); //创建对象超链接
+                document.getElementById("hf").href = href; //绑定a标签
+                document.getElementById("hf").click(); //模拟点击实现下载
+                setTimeout(function () { //延时释放
+                    URL.revokeObjectURL(tmpDown); //用URL.revokeObjectURL()来释放这个object URL
+                }, 100);
+            }
+
+            function s2ab(s) { //字符串转字符流
+                var buf = new ArrayBuffer(s.length);
+                var view = new Uint8Array(buf);
+                for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+                return buf;
+            }
+            // 将指定的自然数转换为26进制表示。映射关系：[0-25] -> [A-Z]。
+            function getCharCol(n) {
+                let temCol = '',
+                    s = '',
+                    m = 0
+                while (n > 0) {
+                    m = n % 26 + 1
+                    s = String.fromCharCode(m + 64) + s
+                    n = (n - m) / 26
+                }
+                return s
+            }
+            downloadExl(data1)
+        }
+    </script>
+</body>
+
+</html>
