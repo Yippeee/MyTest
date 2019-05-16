@@ -12,11 +12,28 @@
 </head>
 
 <body>
+    <p>note: 导入的Excel表头需要按照输入的来设定, 时间设定表头都为时间</p>
     <input type="file" id="excel-file">
     <input type="file" id="excel-file2">
+
+    <label for="">通过什么字段来匹配</label>
+    <input type="text" id="match">
+    <label for="">需要给表1加上什么字段</label>
+    <input type="text" id="suffix">
+
     <button onclick="compare()">对比生成</button>
     <a href="" download="文件名.xlsx" id="hf"></a>
     <script>
+        match = '名称'
+        suffix = '编码'
+        $('#match').bind('input porpertychange', function (e) {
+            console.log(e.target.value);
+            match = e.target.value
+        });
+        $('#suffix').bind('input porpertychange', function (e) {
+            console.log(e.target.value);
+            suffix = e.target.value
+        });
         Date.prototype.format = function (fmt) {
             var o = {
                 "M+": this.getMonth() + 1,                 //月份 
@@ -106,6 +123,7 @@
                 console.log(persons);
                 data2 = persons
                 console.log(typeof data2)
+                console.log('data2的类型', {}.toString(data2))
             };
 
             // 以二进制方式打开文件
@@ -116,31 +134,36 @@
         function compare() {
             console.log('data1: ', data1);
             console.log('data2: ', data2);
-            if(!(data1 && data2)) throw new Error('文件选完哦')
-            // data1[0].
+            if(!(data1 && data2)) {
+                alert('两个文件都需要上传！')
+                return
+            }
+            
             for (const key in data1) {
                 if (data1.hasOwnProperty(key)) {
                     const element = data1[key];
                     // console.log('element: ', element.商品编码);
-                    let code1 = element.商品编码
+                    let code1 = element[match]
+                    element[suffix] = ''
                     for (const key2 in data2) {
                         if (data2.hasOwnProperty(key2)) {
                             const element2 = data2[key2];
-                            let code2 = element2.商品编码
-                            if (code1 === code2 && element.会计日 > element2.生效时间) {
+                            let code2 = element2[match]
+                            if (code1 === code2 && element.时间 > element2.时间) {
                                 // if(!element.识别号 || element2.识别号 > element.识别号){
-                                element.识别号 = element2.识别号
+                                element[suffix] = element2[suffix]
                                 console.log('element2: ', element2);
-                                console.log('element.识别号: ', element.识别号);
+                                console.log('element[suffix]: ', element[suffix]);
                                 break;
                             }
                         }
                     }
-                    element.会计日 = new Date(1900, 0, element.会计日 - 1).format("yyyy/MM/dd")
-                    element.业务时间 = new Date(1900, 0, element.业务时间 - 1).format("yyyy/MM/dd")
+                    element.时间 = new Date(1900, 0, element.时间 - 1).format("yyyy/MM/dd")
+                    // element.业务时间 = new Date(1900, 0, element.业务时间 - 1).format("yyyy/MM/dd mm:ss")
                 }
+                console.log('this is first step data1: ', data1);
             }
-            console.log('data1: ', data1);
+            console.log('this is second step data1: ', data1);
             var tmpDown; //导出的二进制对象
             function downloadExl(json, type) {
                 var tmpdata = json[0];
