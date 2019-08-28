@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <a href="/">重置路劲</a>
+    <h1>原生的 history</h1>
+    <a href="a">to a</a>
+    <a href="b">to b</a>
+    <div id="route-view"></div>
+
+    <h1>原生的 hash</h1>
+    <a href="#/a">to a</a>
+    <a href="#/b">to b</a>
+    <div id="route-view-hash"></div>
+    <div style="white-space: pre">模板参数字段修改。左边为旧的，右边为新的，需要改的用----------标注了，其他的是不需要修改的
+        <article>{
+        "check_program": 1,
+        "check_video": 1,
+        "check_voice": 1,-----------------check_audio
+        "pat": 1,-------------------------check_pat
+        "pmt": 1,-------------------------check_pmt
+        "packet_loss": 1,-----------------check_packet_loss
+        "time_stamp": 1,------------------check_timestamp
+        "es_grammer": 0,------------------check_es_grammer
+        "freeze_frame": 0,----------------check_video_freeze
+        "black_field": 0,-----------------check_black_field
+        "video_miss": 0,------------------check_video_loss
+        "mute": 0,------------------------check_audio_freeze
+        "voice_miss": 0,------------------check_audio_loss
+        "sensitive_info": 0,--------------check_sensitive_info
+        "pts_error_num": 1,
+        "pcr_error_num": 1,
+        "packet_lost_num": -1,
+        "pat_change_num": 1,
+        "pmt_change_num": 1,
+        "pat_interval_err": -1,
+        "pmt_interval_err": -1,
+        "static_shot_second": 100,--------video_freeze_second
+        "black_shot_second": 30,----------black_field_second
+        "silence_second": 30,-------------audio_freeze_second
+        "pst_skip_second": 30,------------pts_skip_second
+        "lost_avdata_kb": 500-------------audiovideo_loss_second
+        }</article>
+    </div>
+
+    <script src="/hash.c0aa2e99.js"></script>
+    <script src="/history.e4256939.js"></script>
+</body>
+</html>

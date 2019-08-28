@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        [class^='img-wrap']{
+            display: inline-flex;
+            flex-flow: column nowrap;
+            /* 主轴 */
+            justify-content: flex-start; 
+            /* 交叉轴 */
+            align-items: flex-start;
+            align-content: flex-start;
+            width: 192px;
+        }
+        body{
+            padding: 0;
+            margin: 0;
+        }
+        .main{
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    <div class="main"></div>
+<script>
+    function appendImg(wrapLength){
+        let rootDir = 'http://cued.xunlei.com/demos/publ/img/'
+        for (let i = 0; i <= 60; i++) {
+            let imgDom = document.createElement('img')
+            let wrap = document.getElementsByClassName('img-wrap')
+            imgDom.src = rootDir + 'P_' + i.toString().padStart(3, 0) + '.jpg'
+            wrap[i % wrapLength].appendChild(imgDom)
+        }
+    }
+    function sizeChange() {
+        let main = document.querySelector('.main')
+        main.innerHTML = ''
+        let columnLength = (window.innerWidth / 192) >>> 0
+        let wrap = document.createDocumentFragment();
+        for(let i = 0; i< columnLength; i++) {
+            let warpContent = document.createElement('div')
+            warpContent.className = 'img-wrap'
+            wrap.appendChild(warpContent)
+        }
+        main.appendChild(wrap)
+        appendImg(columnLength)
+    }
+    sizeChange()
+    window.onresize = sizeChange
+</script>
+</body>
+</html>

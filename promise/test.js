@@ -150,16 +150,22 @@ class MyPromise {
 
 var promise1 = MyPromise.resolve(3);
 var promise2 = 42;
-var promise3 = new MyPromise(function(resolve, reject) {
-  setTimeout(resolve, 100, 'foo');
+var promise3 = new MyPromise(function (resolve, reject) {
+    setTimeout(resolve, 100, 'foo');
 });
 
-MyPromise.all([promise1, promise2, promise3]).then(function(values) {
-  console.log(values);
+MyPromise.all([promise1, promise2, promise3]).then(function (values) {
+    console.log(values);
 });
 
 const p = new MyPromise((resolve, rejected) => {
     resolve(123)
 }).then(val => {
     console.log('val: ', val);
+    setTimeout(() => {
+        console.log('12: ', 12);
+        return 12
+    }, 1000)
+}).then(res => {
+    console.log('res: ', res);
 })

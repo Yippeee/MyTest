@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div id="app">
+        <h3>姓名</h3>
+        <p>{{name}}</p>
+        <h3>年龄</h3>
+        <p>{{age}}</p>
+        <h4>性别</h4>
+        <p>{{gender}}</p>
+        <p>fdsfsd: 
+            <span><span>{{age}}</span><span>{{age}}</span></span>
+            <span>{{age}}</span>
+            <span>{{age}}</span>
+        </p>
+        <button id="b">change</button>
+    </div>
+</body>
+
+</html>
+<script>function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+document.addEventListener('DOMContentLoaded', function () {
+  var opt = {
+    el: '#app',
+    data: {
+      name: '检索中...',
+      age: 30,
+      gender: 'man'
+    }
+  };
+  var vm = new Vue(opt);
+  setTimeout(function () {
+    opt.data.name = '王永峰';
+  }, 2000);
+  b.addEventListener('click', function () {
+    opt.data.name = Math.random();
+  });
+}, false);
+
+var Vue =
+/*#__PURE__*/
+function () {
+  function Vue(opt) {
+    _classCallCheck(this, Vue);
+
+    this.opt = opt;
+    this.observe(opt.data); // 观察数据
+
+    var root = document.querySelector(opt.el);
+    this.compile(root); // 编译页面
+  } // 为响应式对象 data 里的每一个 key 绑定一个观察者对象
+
+
+  _createClass(Vue, [{
+    key: "observe",
+    value: function observe(data) {
+      Object.keys(data).forEach(function (key) {
+        var obv = new Observer();
+        data["_" + key] = data[key]; // 通过 getter setter 暴露 for 循环中作用域下的 obv，闭包产生
+
+        Object.defineProperty(data, key, {
+          get: function get() {
+            Observer.target && obv.addSubNode(Observer.target);
+            return data['_' + key];
+          },
+          set: function set(newVal) {
+            obv.update(newVal);
+            data['_' + key] = newVal;
+          }
+        });
+      });
+    } // 初始化页面，遍历 DOM，收集每一个key变化时，随之调整的位置，以观察者方法存放起来    
+
+  }, {
+    key: "compile",
+    value: function compile(node) {
+      var _this = this;
+
+      [].forEach.call(node.childNodes, function (child) {
+        console.log('child: ', child);
+
+        if (!child.firstElementChild && /\{\{(.*)\}\}/.test(child.innerHTML)) {
+          var key = RegExp.$1.trim();
+          child.innerHTML = child.innerHTML.replace(new RegExp('\\{\\{\\s*' + key + '\\s*\\}\\}', 'gm'), _this.opt.data[key]);
+          Observer.target = child;
+          _this.opt.data[key];
+          Observer.target = null;
+
+          if (child.childElementCount) {
+            _this.compile(child);
+          }
+        } else if (child.childElementCount) {
+          _this.compile(child);
+        }
+      });
+    }
+  }]);
+
+  return Vue;
+}(); // 常规观察者类
+
+
+var Observer =
+/*#__PURE__*/
+function () {
+  function Observer() {
+    _classCallCheck(this, Observer);
+
+    this.subNode = [];
+  }
+
+  _createClass(Observer, [{
+    key: "addSubNode",
+    value: function addSubNode(node) {
+      this.subNode.push(node);
+    }
+  }, {
+    key: "update",
+    value: function update(newVal) {
+      this.subNode.forEach(function (node) {
+        node.innerHTML = newVal;
+      });
+    }
+  }]);
+
+  return Observer;
+}();</script>

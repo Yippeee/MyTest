@@ -5,6 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        .modal {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: .5;
+            background: #000;
+            line-height: 100vh;
+            text-align: center;
+            z-index: 1000;
+            color: wheat;
+        }
+    </style>
     <title>Document</title>
     <script lang="javascript" src="./xlsx.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -23,9 +38,10 @@
 
     <button onclick="compare()">对比生成</button>
     <a href="" download="文件名.xlsx" id="hf"></a>
+    <div class="modal" style="display: none"> 文件处理中... 请勿关闭</div>
     <script>
-        match = '名称'
-        suffix = '编码'
+        match = '商品编码'
+        suffix = '识别号'
         $('#match').bind('input porpertychange', function (e) {
             console.log(e.target.value);
             match = e.target.value
@@ -132,36 +148,54 @@
 
 
         function compare() {
-            console.log('data1: ', data1);
-            console.log('data2: ', data2);
-            if(!(data1 && data2)) {
+            console.log('compare begin~')
+            console.time('文件处理时间')
+            const modal = document.querySelector('.modal')
+            modal.style.display = 'block'
+            return
+            if (!(data1 && data2)) {
                 alert('两个文件都需要上传！')
                 return
             }
-            
+
             for (const key in data1) {
                 if (data1.hasOwnProperty(key)) {
                     const element = data1[key];
                     // console.log('element: ', element.商品编码);
                     let code1 = element[match]
                     element[suffix] = ''
+                    let alpha = Infinity;
                     for (const key2 in data2) {
                         if (data2.hasOwnProperty(key2)) {
                             const element2 = data2[key2];
                             let code2 = element2[match]
-                            if (code1 === code2 && element.时间 > element2.时间) {
-                                // if(!element.识别号 || element2.识别号 > element.识别号){
+
+                            let timeData = element.业务时间 - element2.生效时间
+
+                            if (code1 === code2 && timeData >= 0 && timeData < alpha) {
+                                alpha = timeData
                                 element[suffix] = element2[suffix]
-                                console.log('element2: ', element2);
-                                console.log('element[suffix]: ', element[suffix]);
-                                break;
                             }
+
+
+                            // 下面是用价格来作为判断条件的
+                            // if (code1 === code2 && element.时间 >= element2.时间) {
+                            //     let t = (element2.价格 || 0) - (element.价格 || 0)
+                            //     if (t >= 0) {
+                            //         if (element[suffix] && t > alpha) {
+                            //             continue;
+                            //         }
+
+                            //         alpha = t
+                            //         element[suffix] = element2[suffix]
+                            //     }
+                            // }
                         }
                     }
-                    element.时间 = new Date(1900, 0, element.时间 - 1).format("yyyy/MM/dd")
+                    element.时间 = new Date(1900, 0, element.业务时间 - 1).format("yyyy/MM/dd")
                     // element.业务时间 = new Date(1900, 0, element.业务时间 - 1).format("yyyy/MM/dd mm:ss")
                 }
-                console.log('this is first step data1: ', data1);
+                // console.log('this is first step data1: ', data1);
             }
             console.log('this is second step data1: ', data1);
             var tmpDown; //导出的二进制对象
@@ -224,6 +258,8 @@
                 return s
             }
             downloadExl(data1)
+            modal.style.display = 'none'
+            console.timeEnd('文件处理时间')
         }
     </script>
 </body>
